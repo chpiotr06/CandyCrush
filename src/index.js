@@ -82,7 +82,7 @@ function dragEnd(){
   checkRowForFour();
   checkColumnForFour(); 
   checkRowForThree();
-  checkColumnForThree(); 
+  checkColumnForThree();
 }
 function dragDrop(){
   colorBeingReplaced = this.style.backgroundColor; 
@@ -94,6 +94,34 @@ function dragDrop(){
 function dragOver(e){ e.preventDefault(); }
 function dragEnter(e){ e.preventDefault(); }
 function dragLeave(){}
+
+/**
+ * * drop candies once some have been cleared
+ */
+function moveDown(){
+  for(let i = 0; i < 56; i++){
+    if(squares[i + width].style.backgroundColor === ""){
+      squares[i + width].style.backgroundColor = squares[i].style.backgroundColor;
+      squares[i].style.backgroundColor = "";
+    }
+    const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+    const isFirstRow = firstRow.includes(i)
+    if(isFirstRow && squares[i].style.backgroundColor === ""){
+      let randomColor = candyColors[Math.floor(Math.random() * candyColors.length)];
+      squares[i].style.backgroundColor = randomColor;
+    }
+  }
+  if(squares.every(index => !(index.style.backgroundColor === "") )){
+    checkRowForFour();
+    checkColumnForFour(); 
+    checkRowForThree();
+    checkColumnForThree();
+  }
+}
+
+
+
+
 
 /**
   * * Checking for matches
@@ -116,6 +144,7 @@ function checkRowForFour(){
       })
     }
   }
+  console.log(score);
 }
 function checkColumnForFour(){
   for (let i = 0; i <= 39; i++){
@@ -130,6 +159,7 @@ function checkColumnForFour(){
       })
     }
   }
+  console.log(score);
 }
 function checkRowForThree(){
   for (let i = 0; i <= 61; i++){
@@ -146,6 +176,7 @@ function checkRowForThree(){
       })
     }
   }
+  console.log(score);
 }
 /**
  /////* ! Last row is not taken into consideration thus chceckColumnForThree is not working as expected
@@ -163,4 +194,9 @@ function checkColumnForThree() {
       })
     }
   }
+  console.log(score);
 }
+
+ setInterval(() => {
+    moveDown();
+}, 1000)
