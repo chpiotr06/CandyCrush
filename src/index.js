@@ -1,4 +1,5 @@
 /**
+ ///// *TODO: place checking right after the square is dropped!!! 
  * *Features to be added:
  * *STYLLING!!!
  * *Checking if possible move exists
@@ -18,6 +19,10 @@ const candyColors = [
   "green",
   "blue"
 ];
+let colorBeingDragged; 
+let squareIdBeingDragged;
+let colorBeingReplaced;
+let squareIdBeingReplaced;
 
 // Create board
 function createBoard(){
@@ -25,21 +30,19 @@ function createBoard(){
     const square = document.createElement("div");
     square.setAttribute("draggable", "true");
     square.setAttribute("id", i); 
+    square.innerHTML = i;
     let randomColor = Math.floor(Math.random() * candyColors.length)
     square.style.backgroundColor = candyColors[randomColor];
     grid.appendChild(square);
     squares.push(square);
   }
 }
-
 createBoard();
+checkRowForFour();
+checkColumnForFour(); 
+checkRowForThree();
+checkColumnForThree(); 
 
-let colorBeingDragged; 
-let squareIdBeingDragged;
-let colorBeingReplaced;
-let squareIdBeingReplaced;
-
-//Drag the candies
 squares.forEach(square => square.addEventListener("dragstart", dragStart)); 
 squares.forEach(square => square.addEventListener("dragend", dragEnd)); 
 squares.forEach(square => square.addEventListener("dragover", dragOver)); 
@@ -50,60 +53,47 @@ squares.forEach(square => square.addEventListener("drop", dragDrop));
 function dragStart(){
   colorBeingDragged = this.style.backgroundColor;  
   squareIdBeingDragged = parseInt(this.id);
-  
-  console.log(this.id, "Start");
 }
 
 /**
- * ! Drag does NOT work while interacting with first square
- * ! both form left to right and bottom to up
- * ! Also sometimes diagonal moves are possible
- * ! don't really know why
+ * /////! Drag does NOT work while interacting with first square
+ * /////! both form left to right and bottom to up
+ * ? Also sometimes diagonal moves are possible
+ * ? don't really know why and how to replicate them consistently
+ * ? update to above comment: didn't find any issiues lately :thinking:
  * TODO: Deal with above bugs
+ * * Checking for four works as intended
+ * ? Maybe i need to rewrite functions and make everything in only 2 functions (rows and cols)?
  */
 
 function dragEnd(){
-  //what is a valid move?
   let validMoves = [squareIdBeingDragged - 1,
     squareIdBeingDragged - width,
     squareIdBeingDragged + 1,
     squareIdBeingDragged + width
   ];
   let validMove = validMoves.includes(squareIdBeingReplaced);
-
-  if(squareIdBeingReplaced && validMove){
+  if(squareIdBeingReplaced >= 0  && validMove){
     squareIdBeingReplaced = null;
-  } else if(squareIdBeingReplaced && !validMove){
+  } else {
     squares[squareIdBeingReplaced].style.backgroundColor = colorBeingReplaced;
     squares[squareIdBeingDragged].style.backgroundColor = colorBeingDragged;
-  } else {
-    squares[squareIdBeingDragged].style.backgroundColor = colorBeingDragged;
-  }
-  console.log(this.id, "End");
+  } 
+  checkRowForFour();
+  checkColumnForFour(); 
+  checkRowForThree();
+  checkColumnForThree(); 
 }
-
-function dragOver(e){
-  e.preventDefault();
-  console.log(this.id, "Over");
-}
-
-function dragEnter(e){
-  e.preventDefault();
-  console.log(this.id, "Enter");
-}
-
-function dragLeave(){
-  console.log(this.id, "Leave");
-}
-
 function dragDrop(){
   colorBeingReplaced = this.style.backgroundColor; 
   squareIdBeingReplaced = parseInt(this.id);
   squares[squareIdBeingDragged].style.backgroundColor = colorBeingReplaced;
   this.style.backgroundColor = colorBeingDragged;
-  console.log(this.id, "Drop");
 }
 
+function dragOver(e){ e.preventDefault(); }
+function dragEnter(e){ e.preventDefault(); }
+function dragLeave(){}
 
 /**
   * * Checking for matches
@@ -128,7 +118,7 @@ function checkRowForFour(){
   }
 }
 function checkColumnForFour(){
-  for (let i = 0; i <= 47; i++){
+  for (let i = 0; i <= 39; i++){
     let columnOfFour = [i, i + width, i + width*2, i + width*3];
     let decidedColor = squares[i].style.backgroundColor;
     const isBlank = squares[i].style.backgroundColor === "";
@@ -149,7 +139,6 @@ function checkRowForThree(){
 
     const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55];
     if (notValid.includes(i)) continue;
-    
     if (rowOfThree.every(index => squares[index].style.backgroundColor === decidedColor && !isBlank )){
       score += 3;
       rowOfThree.forEach(index => {
@@ -158,6 +147,9 @@ function checkRowForThree(){
     }
   }
 }
+/**
+ /////* ! Last row is not taken into consideration thus chceckColumnForThree is not working as expected
+ */
 function checkColumnForThree() {
   for (i = 0; i < 48; i ++) {
     let columnOfThree = [i, i+width, i+width*2]
@@ -167,17 +159,8 @@ function checkColumnForThree() {
     if(columnOfThree.every(index => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
       score += 3
       columnOfThree.forEach(index => {
-      squares[index].style.backgroundColor = ''
+        squares[index].style.backgroundColor = ''
       })
     }
   }
 }
-checkColumnForThree()
-
-// *TODO: place checking right after the square is dropped!!! 
-window.setInterval(function(){
-  checkRowForFour();
-  checkColumnForFour(); 
-  checkRowForThree();
-  checkColumnForThree(); 
-}, 100)
