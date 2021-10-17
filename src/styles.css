@@ -1,3 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+body{
+  margin: 0;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.score{
+  font-size: 6em;
+  font-family: 'Montserrat', sans-serif;
+  color: #ffffff;
+}
+
+
 .grid{
   height: 560px;
   width: 560px;
@@ -8,4 +32,16 @@
 .grid div{
   height: 70px;
   width: 70px;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

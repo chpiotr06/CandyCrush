@@ -12,13 +12,14 @@ const squares = [];
 let score = 0;
 
 const candyColors = [
-  "red",
-  "yellow",
-  "orange",
-  "purple",
-  "green",
-  "blue"
+  "#f59598",
+  "#faf28d",
+  "#fcbc7c",
+  "#b3b3da",
+  "#bbdcad",
+  "#6a9aaa"
 ];
+const scoreHolder = document.querySelector(".score");
 let colorBeingDragged; 
 let squareIdBeingDragged;
 let colorBeingReplaced;
@@ -30,12 +31,13 @@ function createBoard(){
     const square = document.createElement("div");
     square.setAttribute("draggable", "true");
     square.setAttribute("id", i); 
-    square.innerHTML = i;
+
     let randomColor = Math.floor(Math.random() * candyColors.length)
     square.style.backgroundColor = candyColors[randomColor];
     grid.appendChild(square);
     squares.push(square);
   }
+  scoreHolder.innerHTML = "Score: " + score;
 }
 createBoard();
 checkRowForFour();
@@ -116,6 +118,8 @@ function moveDown(){
     checkColumnForFour(); 
     checkRowForThree();
     checkColumnForThree();
+    scoreHolder.innerHTML = "Score: " + score;
+
   }
 }
 
@@ -199,4 +203,4 @@ function checkColumnForThree() {
 
  setInterval(() => {
     moveDown();
-}, 1000)
+}, 100)
