@@ -86,11 +86,47 @@ function dragEnd(){
   checkRowForThree();
   checkColumnForThree();
 }
+
+function checkRowThree(){
+  for (let i = 0; i <= 61; i++){
+    let rowOfThree = [i, i + 1, i + 2];
+    let decidedColor = squares[i].style.backgroundColor;
+    const isBlank = squares[i].style.backgroundColor === "";
+
+    const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55];
+    if (notValid.includes(i)) continue;
+    if (rowOfThree.every(index => squares[index].style.backgroundColor === decidedColor && !isBlank )){
+      return true;
+    }
+  }
+  return false;
+}
+/**
+ /////* ! Last row is not taken into consideration thus chceckColumnForThree is not working as expected
+ */
+function checkColumnThree() {
+  for (i = 0; i < 48; i ++) {
+    let columnOfThree = [i, i+width, i+width*2]
+    let decidedColor = squares[i].style.backgroundColor
+    const isBlank = squares[i].style.backgroundColor === ''
+
+    if(columnOfThree.every(index => squares[index].style.backgroundColor === decidedColor && !isBlank)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function dragDrop(){
   colorBeingReplaced = this.style.backgroundColor; 
   squareIdBeingReplaced = parseInt(this.id);
   squares[squareIdBeingDragged].style.backgroundColor = colorBeingReplaced;
   this.style.backgroundColor = colorBeingDragged;
+  if(checkRowThree() || checkColumnThree()){
+  }else{
+    this.style.backgroundColor = colorBeingReplaced;
+    squares[squareIdBeingDragged].style.backgroundColor = colorBeingDragged;
+  }
 }
 
 function dragOver(e){ e.preventDefault(); }
@@ -122,11 +158,6 @@ function moveDown(){
 
   }
 }
-
-
-
-
-
 /**
   * * Checking for matches
   * // Function chcecks for match even where row breaks to next row
@@ -148,7 +179,6 @@ function checkRowForFour(){
       })
     }
   }
-  console.log(score);
 }
 function checkColumnForFour(){
   for (let i = 0; i <= 39; i++){
@@ -163,7 +193,6 @@ function checkColumnForFour(){
       })
     }
   }
-  console.log(score);
 }
 function checkRowForThree(){
   for (let i = 0; i <= 61; i++){
@@ -180,7 +209,6 @@ function checkRowForThree(){
       })
     }
   }
-  console.log(score);
 }
 /**
  /////* ! Last row is not taken into consideration thus chceckColumnForThree is not working as expected
@@ -198,7 +226,6 @@ function checkColumnForThree() {
       })
     }
   }
-  console.log(score);
 }
 
  setInterval(() => {
