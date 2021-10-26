@@ -21,6 +21,16 @@ body{
   color: #ffffff;
 }
 
+.fab{
+  color: white;
+  font-size: 3em;
+}
+
+.square{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .grid{
   height: 560px;
